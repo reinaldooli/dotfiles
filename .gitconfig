@@ -22,7 +22,7 @@
 	st = status
 	who = shortlog -s --
 	fl = log -p
-	lg = log --graph --prety=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative
 	sb = status -sb
 	dw = dif --word-diff
 [core]
