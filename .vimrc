@@ -25,6 +25,7 @@ set foldmethod=syntax
 set foldminlines=0
 set foldnestmax=3
 set gdefault
+set guifont=Meslo
 set hlsearch
 set ignorecase
 set incsearch
@@ -76,3 +77,5 @@ autocmd! bufwritepost * set noexpandtab | retab! 4
 
 execute pathogen#infect()
 filetype plugin indent on
+
+let g:airline_powerline_fonts=1
