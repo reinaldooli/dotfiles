@@ -30,7 +30,7 @@ set hlsearch
 set ignorecase
 set incsearch
 set laststatus=2
-set lcs=tab:\|\ ,trail:·,eol:¬,nbsp:_
+set lcs=tab:\|\ ,trail:·,extends:»,precedes:«,nbsp:_
 set list
 set noeol
 set noerrorbells
@@ -41,10 +41,11 @@ set modelines=4
 set ruler
 set scrolloff=3
 set secure
+set shiftwidth=4
 set shortmess=atI
 set showcmd
 set showmode
-set tabstop=2
+set softtabstop=4
 set ttyfast
 set title
 set wildmenu
@@ -61,14 +62,8 @@ endif
 "   au BufReadPost * set relativenumber
 " endif
 
-" convert spaces to tabs when reading file
-autocmd! bufreadpost * set noexpandtab | retab! 4
-
 " convert tabs to spaces before writing file
 autocmd! bufwritepre * set expandtab | retab! 4
-
-" convert spaces to tabs after writing file (to show guides again)
-autocmd! bufwritepost * set noexpandtab | retab! 4
 
 :hi CursorLine   cterm=NONE ctermbg=238 ctermfg=NONE guibg=238 guifg=NONE
 :hi CursorColumn cterm=NONE ctermbg=238 ctermfg=NONE guibg=238 guifg=NONE
@@ -78,4 +73,39 @@ autocmd! bufwritepost * set noexpandtab | retab! 4
 execute pathogen#infect()
 filetype plugin indent on
 
+" vim-airline plugin configurations
 let g:airline_powerline_fonts=1
+
+" ultisnips vim plugin configurations
+let g:UltiSnipsSnippetDirectories=["ultisnips"]
+
+" indent-highlight plugin configurations
+let g:indentLine_color_term=239
+let g:indentLine_color_gui='#09AA08'
+let g:indentLine_char='┆'
+
+" supertab plugin configurations
+" Remap autocomplete menu control keys
+" inoremap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
+" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+" inoremap <expr> j pumvisible() ? "\<C-n>" : "j"
+" inoremap <expr> k pumvisible() ? "\<C-p>" : "k"
+" inoremap <expr> h pumvisible() ? "\<PageUp>\<C-n>\<C-p>" : "h"
+" inoremap <expr> l pumvisible() ? "\<PageDown>\<C-n>\<C-p>" : "l"
+" let g:SuperTabCrMapping = 0 " prevent remap from breaking supertab
+" let g:SuperTabDefaultCompletionType = "context"
+" let g:SuperTabContextDefaultCompletionType = "<c-n>"
+" set wildmode=list:longest,full
+" let g:SuperTabClosePreviewOnPopupClose = 1 " close scratch window on autocompletion
+
+" delimitMate plugin configurations
+let delimitMate_expand_cr=1
+
+" nerdtree plugin configurations
+nmap <leader>d :NERDTreeToggle<CR>
+
+" ctrlp plugin configurations
+let g:ctrlp_map='<leader>t'
+set wildignore+=*/build/**
+set wildignore+=*/target/**
+let g:ctrlp_use_caching=0
