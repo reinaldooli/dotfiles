@@ -100,3 +100,6 @@ let g:indentLine_char='┆'
 
 " delimitMate plugin configurations
 let delimitMate_expand_cr=1
+
+" nerdtree plugin configurations
+nmap <leader>d :NERDTreeToggle<CR>
