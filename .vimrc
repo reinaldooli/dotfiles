@@ -78,4 +78,8 @@ autocmd! bufwritepost * set noexpandtab | retab! 4
 execute pathogen#infect()
 filetype plugin indent on
 
+" vim-airline plugin configurations
 let g:airline_powerline_fonts=1
+
+" ultisnips vim plugin configurations
+let g:UltiSnipsSnippetDirectories=["ultisnips"]
