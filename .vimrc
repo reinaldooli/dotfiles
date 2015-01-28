@@ -103,3 +103,9 @@ let delimitMate_expand_cr=1
 
 " nerdtree plugin configurations
 nmap <leader>d :NERDTreeToggle<CR>
+
+" ctrlp plugin configurations
+let g:ctrlp_map='<leader>t'
+set wildignore+=*/build/**
+set wildignore+=*/target/**
+let g:ctrlp_use_caching=0
