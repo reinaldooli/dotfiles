@@ -30,7 +30,7 @@ set hlsearch
 set ignorecase
 set incsearch
 set laststatus=2
-set lcs=tab:\|\ ,trail:·,eol:¬,nbsp:_
+set lcs=tab:\|\ ,trail:·,extends:»,precedes:«,nbsp:_
 set list
 set noeol
 set noerrorbells
@@ -41,10 +41,11 @@ set modelines=4
 set ruler
 set scrolloff=3
 set secure
+set shiftwidth=4
 set shortmess=atI
 set showcmd
 set showmode
-set tabstop=2
+set softtabstop=4
 set ttyfast
 set title
 set wildmenu
@@ -61,14 +62,8 @@ endif
 "   au BufReadPost * set relativenumber
 " endif
 
-" convert spaces to tabs when reading file
-autocmd! bufreadpost * set noexpandtab | retab! 4
-
 " convert tabs to spaces before writing file
 autocmd! bufwritepre * set expandtab | retab! 4
-
-" convert spaces to tabs after writing file (to show guides again)
-autocmd! bufwritepost * set noexpandtab | retab! 4
 
 :hi CursorLine   cterm=NONE ctermbg=238 ctermfg=NONE guibg=238 guifg=NONE
 :hi CursorColumn cterm=NONE ctermbg=238 ctermfg=NONE guibg=238 guifg=NONE
@@ -83,3 +78,8 @@ let g:airline_powerline_fonts=1
 
 " ultisnips vim plugin configurations
 let g:UltiSnipsSnippetDirectories=["ultisnips"]
+
+" indent-highlight plugin configurations
+let g:indentLine_color_term=239
+let g:indentLine_color_gui='#09AA08'
+let g:indentLine_char='┆'
