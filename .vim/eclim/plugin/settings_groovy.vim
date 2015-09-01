@@ -2,7 +2,7 @@
 "
 " License: {{{
 "
-" Copyright (C) 2005 - 2014  Eric Van Dewoestine
+" Copyright (C) 2014  Eric Van Dewoestine
 "
 " This program is free software: you can redistribute it and/or modify
 " it under the terms of the GNU General Public License as published by
@@ -21,25 +21,18 @@
 
 " Global Varables {{{
   call eclim#AddVimSetting(
-    \ 'Lang/Php', 'g:EclimPhpValidate', 1,
-    \ 'Sets whether or not to validate php files on save.',
-    \ '\(0\|1\)')
+    \ 'Lang/Groovy', 'g:EclimGroovyCompleteLayout',
+    \ &completeopt !~ 'preview' && &completeopt =~ 'menu' ? 'standard' : 'compact',
+    \ "Determines how overloaded methods are displayed in the completion popup.\n" .
+    \ "The default is based on your current completion settings. If set to 'compact',\n" .
+    \ "you can set it to 'standard' to force eclim to display all overridden members\n" .
+    \ "in the popup rather than relying on the preview menu for that info.",
+    \ '\(standard\|compact\)')
 
   call eclim#AddVimSetting(
-    \ 'Lang/Php', 'g:EclimPhpHtmlValidate', 1,
-    \ "When php validation is enabled, this sets whether or not to validate\n" .
-    \ "html content in your php files on save.",
+    \ 'Lang/Groovy', 'g:EclimGroovyValidate', 1,
+    \ 'Sets whether or not to validate groovy files on save.',
     \ '\(0\|1\)')
-
-  call eclim#AddVimSetting(
-    \ 'Lang/Php', 'g:EclimPhpSyntasticEnabled', 0,
-    \ "Only enable this if you want both eclim and syntastic to validate your php files.\n" .
-    \ "If you want to use syntastic instead of eclim, simply disable PhpValidate.",
-    \ '\(0\|1\)')
-
-  call eclim#AddVimSetting(
-    \ 'Lang/Php', 'g:EclimPhpSearchSingleResult', g:EclimDefaultFileOpenAction,
-    \ 'Sets the command to use when opening a single result from a php search.')
 " }}}
 
 " vim:ft=vim:fdm=marker

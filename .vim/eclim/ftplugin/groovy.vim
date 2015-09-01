@@ -2,7 +2,7 @@
 "
 " License: {{{
 "
-" Copyright (C) 2005 - 2014  Eric Van Dewoestine
+" Copyright (C) 2014  Eric Van Dewoestine
 "
 " This program is free software: you can redistribute it and/or modify
 " it under the terms of the GNU General Public License as published by
@@ -21,39 +21,23 @@
 
 " Options {{{
 
-exec 'setlocal ' . g:EclimCompletionMethod . '=eclim#php#complete#CodeComplete'
-
-call eclim#lang#DisableSyntasticIfValidationIsEnabled('php')
+exec 'setlocal ' . g:EclimCompletionMethod . '=eclim#groovy#complete#CodeComplete'
 
 " }}}
 
 " Autocmds {{{
 
-augroup eclim_html_validate
-  autocmd!
-augroup END
-
-augroup eclim_php
+augroup eclim_groovy
   autocmd! BufWritePost <buffer>
-  autocmd BufWritePost <buffer> call eclim#php#util#UpdateSrcFile(1)
+  autocmd BufWritePost <buffer> call eclim#lang#UpdateSrcFile('groovy')
 augroup END
 
 " }}}
 
 " Command Declarations {{{
 
-command! -nargs=0 -buffer Validate :call eclim#php#util#UpdateSrcFile(0)
-
-if !exists(":PhpSearch")
-  command -buffer -nargs=*
-    \ -complete=customlist,eclim#php#search#CommandCompleteSearch
-    \ PhpSearch :call eclim#php#search#Search('<args>')
-endif
-
-if !exists(":PhpSearchContext")
-  command -buffer -nargs=*
-    \ -complete=customlist,eclim#php#search#CommandCompleteSearchContext
-    \ PhpSearchContext :call eclim#php#search#SearchContext('<args>')
+if !exists(":Validate")
+  command! -nargs=0 -buffer Validate :call eclim#lang#UpdateSrcFile('groovy', 1)
 endif
 
 " }}}
