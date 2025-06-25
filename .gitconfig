@@ -1,11 +1,13 @@
 [user]
 	name = Reinaldo Oliveira
-	email = reinaldo.oliveira@tidexa.com
+	email = reinaldooli@gmail.com
+
 [color]
 	diff = auto
 	status = auto
 	branch = auto
 	ui = true
+
 [color "diff"]
 	plain = black
 	meta = black
@@ -14,6 +16,7 @@
 	new = green
 	commit = yellow
 	whitespace = normal red
+
 [alias]
 	sh = !git-sh
 	ci = commit
@@ -25,5 +28,6 @@
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative
 	sb = status -sb
 	dw = dif --word-diff
+
 [core]
 	excludesfile = ~/.gitignore
