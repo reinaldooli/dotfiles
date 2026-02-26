@@ -25,19 +25,19 @@ brew "findutils"
 brew "gawk"
 
 # Languages stuff
-cask "mise"
+brew "mise"
 
 # GUI Applications
 cask "iterm2"
 cask "visual-studio-code"
-cask "docker"
+# cask "docker"
 cask "ghostty"
-cask "discord"
+# cask "discord"
 cask "shottr"
 
 # I don't want these by default
 # cask "raycast"
-# cask "caffeine"
+cask "caffeine"
 
 # Fonts
 cask "font-jetbrains-mono-nerd-font"
