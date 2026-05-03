@@ -42,19 +42,51 @@ backup_conflicts() {
   fi
 }
 
-# --- Git user configuration ---
-info "Configuring git user..."
-read -rp "Enter your full name for git: " git_name
-read -rp "Enter your email for git: " git_email
+# --- Git per-machine config ---
+# The tracked .gitconfig ends with `[include] path = ~/.gitconfig.local`,
+# and git applies includes in order, so values written below override the
+# shared config. We only generate this file if it does not already exist —
+# re-running install.sh will never clobber local tweaks.
+GITCONFIG_LOCAL="$HOME/.gitconfig.local"
+if [[ -f "$GITCONFIG_LOCAL" ]]; then
+  info "Existing $GITCONFIG_LOCAL found — leaving it untouched."
+else
+  info "Configuring per-machine git identity..."
+  read -rp "Enter your full name for git: " git_name
+  read -rp "Enter your email for git: " git_email
+  read -rp "Enter your SSH signing key (leave blank to add later): " git_signingkey
 
-if [[ -z "$git_name" || -z "$git_email" ]]; then
-  error "Name and email cannot be empty."
-  exit 1
+  if [[ -z "$git_name" || -z "$git_email" ]]; then
+    error "Name and email cannot be empty."
+    exit 1
+  fi
+
+  {
+    echo "[user]"
+    echo "	name = $git_name"
+    echo "	email = $git_email"
+    [[ -n "$git_signingkey" ]] && echo "	signingkey = $git_signingkey"
+  } > "$GITCONFIG_LOCAL"
+
+  info "Wrote $GITCONFIG_LOCAL"
+
+  # Seed ~/.config/git/allowed_signers so this machine can verify its own
+  # signed commits. The tracked .gitconfig points allowedSignersFile here;
+  # the file itself is per-machine (it pairs an identity with a public key).
+  if [[ -n "$git_signingkey" ]]; then
+    ALLOWED_SIGNERS="$HOME/.config/git/allowed_signers"
+    mkdir -p "$(dirname "$ALLOWED_SIGNERS")"
+    if [[ ! -f "$ALLOWED_SIGNERS" ]] || ! grep -qF "$git_signingkey" "$ALLOWED_SIGNERS"; then
+      echo "$git_email $git_signingkey" >> "$ALLOWED_SIGNERS"
+      info "Added signing key to $ALLOWED_SIGNERS"
+    fi
+  fi
 fi
 
-sed -i'' -e "s/name = Your Name/name = $git_name/" "$DOTFILES_DIR/dotfiles/git/.gitconfig"
-sed -i'' -e "s/email = your@email.com/email = $git_email/" "$DOTFILES_DIR/dotfiles/git/.gitconfig"
-info "Git configured for $git_name <$git_email>"
+# --- Zsh per-machine overrides directory ---
+# .zshrc sources ~/.zsh.local.d/*.sh after the shared config. Make sure
+# the directory exists so users have an obvious place to drop overrides.
+mkdir -p "$HOME/.zsh.local.d"
 
 # Install Homebrew if not already installed
 if ! command -v brew &>/dev/null; then

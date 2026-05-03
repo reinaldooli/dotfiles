@@ -1,7 +1,3 @@
-[user]
-	name = Your Name
-	email = your@email.com
-
 [color]
 	diff = auto
 	status = auto
@@ -33,13 +29,23 @@
 	excludesfile = ~/.gitignore
 
 [gpg]
-    format = ssh
+	format = ssh
 
 [gpg "ssh"]
-    allowedSignersFile = ~/.config/git/allowed_signers
+	allowedSignersFile = ~/.config/git/allowed_signers
 
 [commit]
-    gpgsign = true
+	gpgsign = true
 
 [tag]
-    gpgsign = true
+	gpgsign = true
+
+[init]
+	defaultBranch = main
+
+# Per-machine overrides live in ~/.gitconfig.local (untracked, never
+# touched by `git pull`). Because git applies includes in order, anything
+# in that file overrides the values set above. Put identity, signing
+# program path, work-only aliases, etc. there.
+[include]
+	path = ~/.gitconfig.local
