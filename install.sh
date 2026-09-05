@@ -88,20 +88,49 @@ fi
 # the directory exists so users have an obvious place to drop overrides.
 mkdir -p "$HOME/.zsh.local.d"
 
-# Install Homebrew if not already installed
-if ! command -v brew &>/dev/null; then
+# --- Homebrew ---
+# Apple Silicon installs to /opt/homebrew, Intel to /usr/local. Resolving the
+# prefix instead of hardcoding it is what lets this script run on both; the
+# previous hardcoded /opt/homebrew/bin/brew aborted the whole script on Intel
+# (set -e) before it ever reached stow.
+find_brew() {
+  local candidate
+  for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [[ -x "$candidate" ]]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  command -v brew 2>/dev/null
+}
+
+BREW="$(find_brew || true)"
+
+if [[ -z "$BREW" ]]; then
   info "Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  BREW="$(find_brew || true)"
+  if [[ -z "$BREW" ]]; then
+    error "Homebrew finished installing but 'brew' was not found on this system."
+    exit 1
+  fi
 fi
 
+# .zshrc sources ~/.zsh.d/01-env.sh, which runs shellenv itself, but login
+# shells read .zprofile first and some tooling never sources .zshrc at all.
+if ! grep -qs 'brew shellenv' "$HOME/.zprofile"; then
+  echo "eval \"\$($BREW shellenv)\"" >> "$HOME/.zprofile"
+  info "Added brew shellenv to ~/.zprofile"
+fi
+
+eval "$("$BREW" shellenv)"
+
 # Install applications via Brewfile
-if [[ -f ./Brewfile ]]; then
+if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
   info "Installing applications from Brewfile..."
-  brew bundle --file=./Brewfile
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
 else
-  warn "Warning: Brewfile not found in current directory"
+  warn "Brewfile not found at $DOTFILES_DIR/Brewfile"
 fi
 
 # Install Zap ZSH plugin manager
@@ -112,9 +141,6 @@ if [[ ! -d "${XDG_DATA_HOME:-$HOME/.local/share}/zap" ]]; then
   rm -f ~/.zshrc
 fi
 
-# Re-source Homebrew env just in case
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
 # --- Stow dotfiles ---
 info "Linking dotfiles with stow..."
 for dir in "$DOTFILES_DIR"/dotfiles/*/; do
@@ -124,7 +150,7 @@ for dir in "$DOTFILES_DIR"/dotfiles/*/; do
   stow -d "$DOTFILES_DIR/dotfiles" -t "$HOME" "$pkg"
 done
 
-# Optionally restart the shell
-exec zsh -l
+info "Done! Starting a fresh login shell..."
 
-info "Done! You may need to restart your shell for all changes to take effect."
+# Replace this process with a login shell so the new config is live.
+exec zsh -l
