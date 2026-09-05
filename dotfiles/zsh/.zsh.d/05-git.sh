@@ -1,3 +1,39 @@
+# --- Git aliases ---
+# Vendored from oh-my-zsh's git plugin:
+#   https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/git/git.plugin.zsh
+#
+# It is vendored rather than pulled in with zap because zap's `plug` only
+# takes a whole repo (or a local path) -- it cannot load a subdirectory of
+# ohmyzsh/ohmyzsh -- and the standalone forks either require oh-my-zsh
+# anyway or rename the aliases.
+#
+# The upstream plugin relies on helpers that live in oh-my-zsh's core
+# lib/git.zsh, which we do not have. Only one of them is actually reachable
+# from here -- git_current_branch, used by 15 aliases (gpsup, ggpush, ggl,
+# groh, ...) -- so it is reproduced below. Without it those aliases fail with
+# "command not found".
+#
+# To refresh the vendored copy, replace everything below this header with:
+#   curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh
+
+# From oh-my-zsh lib/git.zsh. GIT_OPTIONAL_LOCKS=0 keeps status-like reads
+# from taking the index lock, which matters on large repos.
+function __git_prompt_git() {
+  GIT_OPTIONAL_LOCKS=0 command git "$@"
+}
+
+# The current branch name, or the short SHA when HEAD is detached.
+function git_current_branch() {
+  local ref
+  ref=$(__git_prompt_git symbolic-ref --quiet HEAD 2> /dev/null)
+  local ret=$?
+  if [[ $ret != 0 ]]; then
+    [[ $ret == 128 ]] && return   # not a git repo
+    ref=$(__git_prompt_git rev-parse --short HEAD 2> /dev/null) || return
+  fi
+  echo ${ref#refs/heads/}
+}
+
 # Git version checking
 autoload -Uz is-at-least
 git_version="${${(As: :)$(git version 2>/dev/null)}[3]}"
